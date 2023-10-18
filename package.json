@@ -1,5 +1,10 @@
 {
   "name": "vercel-pinecone-template",
+  "browser":{
+    "fs": false,
+    "path": false,
+    "os": false
+  },
   "version": "0.1.0",
   "private": true,
   "scripts": {

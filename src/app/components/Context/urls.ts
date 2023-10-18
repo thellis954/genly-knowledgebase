@@ -20,9 +20,15 @@ export const urls = [{
 }]
 
 export const folders = [{
-  location: "/public/FILES/",
-  filetypes: ["pdf","mp4"],
+  location: "/public/FILES/videos",
+  filetypes: ["mp4"],
   seeded: false,
   loading: false,
 },
+{
+  location: "/public/FILES/pdfs",
+  filetypes: ["pdf"],
+  seeded: false,
+  loading: false,
+  },
 ]

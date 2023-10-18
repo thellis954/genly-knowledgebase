@@ -79,6 +79,9 @@ export const Context: React.FC<ContextProps> = ({ className, selected }) => {
         <div className="flex flex-col items-start lg:flex-row w-full lg:flex-wrap p-2">
           {buttons}
         </div>
+        <div className="flex flex-col items-start lg:flex-row w-full lg:flex-wrap p-2">
+          {folderButtons}
+        </div>
         <div className="flex-grow w-full px-4">
           <Button
             className="w-full my-2 uppercase active:scale-[98%] transition-transform duration-100"

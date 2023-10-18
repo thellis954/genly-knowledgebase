@@ -1,6 +1,9 @@
 import cheerio from 'cheerio';
 import { NodeHtmlMarkdown } from 'node-html-markdown';
 
+
+
+
 interface Folder {
   location: string;
   files: string[];
@@ -17,27 +20,40 @@ class Parser {
     // Add the start URL to the queue
     this.addToQueue(folderLocation);
 
+    var fs = require('fs').promises;
+
+    //GET THE LIST OF FILES IN THIS FOLDER, FOR EACH ONE, SEND TO "FetchPage()"
+    fs.readdirSync(folderLocation, (err: any, files: any) => {
+      files.forEach((file: any) => {
+        
+        console.log(file);
+      });
+    });
+    
     // While there are URLs in the queue and we haven't reached the maximum number of pages...
     while (this.shouldContinueCrawling()) {
-      // Dequeue the next URL and depth
-      const { location, depth } = this.queue.shift()!;
+      fs.readdir(folderLocation, (err: any, files: any) => {
+        files.forEach((file: any) => {
+          // Dequeue the next URL and depth
+          const { location, depth } = this.queue.shift()!;
 
-      // If the depth is too great or we've already seen this URL, skip it
-      if (this.isTooDeep(depth) || this.isAlreadySeen(location)) continue;
+          // If the depth is too great or we've already seen this URL, skip it
+          if (this.isTooDeep(depth) || this.isAlreadySeen(location)){
+            // Add the URL to the set of seen URLs
+            this.seen.add(location);
 
-      // Add the URL to the set of seen URLs
-      this.seen.add(location);
+            // Fetch the page HTML
+            const html = "";
 
-      // Fetch the page HTML
-      const html = await this.fetchPage(location);
+            // Parse the HTML and add the page to the list of crawled pages
+            this.folders.push({ location, files: [] });
 
-      // Parse the HTML and add the page to the list of crawled pages
-      this.folders.push({ location, files: [] });
-
-      // Extract new URLs from the page HTML and add them to the queue
-      this.addNewUrlsToQueue(this.extractUrls(html, location), depth);
+            // Extract new URLs from the page HTML and add them to the queue
+            this.addNewUrlsToQueue(this.extractUrls(html, location), depth);
+          }
+        });
+      });
     }
-
     // Return the list of crawled pages
     return this.folders;
   }
