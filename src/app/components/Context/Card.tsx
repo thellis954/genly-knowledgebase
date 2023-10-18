@@ -5,6 +5,8 @@ export interface ICard {
   pageContent: string;
   metadata: {
     hash: string;
+    text: string;
+    chunk: string;
   };
 }
 
@@ -28,5 +30,6 @@ export const Card: FC<ICardProps> = ({ card, selected }) => (
   >
     <ReactMarkdown>{card.pageContent}</ReactMarkdown>
     <b className="text-xs">{card.metadata.hash}</b>
+    
   </div>
 );

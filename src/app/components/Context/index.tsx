@@ -1,8 +1,10 @@
 import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { urls } from "./urls";
+import { folders } from "./urls";
 import UrlButton from "./UrlButton";
+import FolderButton from "./FolderButton";
 import { Card, ICard } from "./Card";
-import { clearIndex, crawlDocument } from "./utils";
+import { clearIndex, crawlDocument, crawlFolder } from "./utils";
 
 import { Button } from "./Button";
 interface ContextProps {
@@ -12,6 +14,7 @@ interface ContextProps {
 
 export const Context: React.FC<ContextProps> = ({ className, selected }) => {
   const [entries, setEntries] = useState(urls);
+  const [foldersEntries, setFoldersEntries] = useState(folders);
   const [cards, setCards] = useState<ICard[]>([]);
 
   const [splittingMethod, setSplittingMethod] = useState("markdown");
@@ -32,6 +35,7 @@ export const Context: React.FC<ContextProps> = ({ className, selected }) => {
     </label>
   );
 
+  
   const buttons = entries.map((entry, key) => (
     <div className="" key={`${key}-${entry.loading}`}>
       <UrlButton
@@ -50,6 +54,23 @@ export const Context: React.FC<ContextProps> = ({ className, selected }) => {
     </div>
   ));
 
+  const folderButtons = foldersEntries.map((entry, key) => (
+    <div className="" key={`${key}-${entry.loading}`}>
+      <FolderButton
+        entry={entry}
+        onClick={() =>
+          crawlFolder(
+            entry.location,
+            setFoldersEntries,
+            setCards,
+            splittingMethod,
+            chunkSize,
+            overlap
+          )
+        }
+      />
+    </div>
+  ));
   return (
     <div
       className={`flex flex-col border-2 overflow-y-auto rounded-lg border-gray-500 w-full ${className}`}

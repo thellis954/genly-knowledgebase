@@ -1,5 +1,8 @@
 import { IUrlEntry } from "./UrlButton";
+import { IFolderEntry } from "./FolderButton";
 import { ICard } from "./Card";
+
+
 
 export async function crawlDocument(
   url: string,
@@ -34,6 +37,43 @@ export async function crawlDocument(
   setEntries((prevEntries: IUrlEntry[]) =>
     prevEntries.map((entry: IUrlEntry) =>
       entry.url === url ? { ...entry, seeded: true, loading: false } : entry
+    )
+  );
+}
+
+export async function crawlFolder(
+  location: string,
+  setFolders: React.Dispatch<React.SetStateAction<IFolderEntry[]>>,
+  setCards: React.Dispatch<React.SetStateAction<ICard[]>>,
+  splittingMethod: string,
+  chunkSize: number,
+  overlap: number
+): Promise<void> {
+  setFolders((seeded: IFolderEntry[]) =>
+    seeded.map((seed: IFolderEntry) =>
+      seed.location === location ? { ...seed, loading: true } : seed
+    )
+  );
+  const response = await fetch("/api/parse", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      location,
+      options: {
+        splittingMethod,
+        chunkSize,
+        overlap,
+      },
+    }),
+  });
+
+  const { documents } = await response.json();
+
+  setCards(documents);
+
+  setFolders((prevEntries: IFolderEntry[]) =>
+    prevEntries.map((entry: IFolderEntry) =>
+      entry.location === location ? { ...entry, seeded: true, loading: false } : entry
     )
   );
 }

@@ -1,3 +1,5 @@
+import { load } from "cheerio"
+
 export const urls = [{
   url: "https://e360.yale.edu/digest/indonesia-malaysia-deforestation",
   title: "Indonesia Deforestation",
@@ -16,3 +18,11 @@ export const urls = [{
   seeded: false,
   loading: false,
 }]
+
+export const folders = [{
+  location: "/public/FILES/",
+  filetypes: ["pdf","mp4"],
+  seeded: false,
+  loading: false,
+},
+]
